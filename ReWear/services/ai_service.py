@@ -1,12 +1,11 @@
 import json
 import os
 
-from openai import OpenAI
+from google import genai
 
 
-# Read the API key from .env
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
 )
 
 
@@ -73,15 +72,12 @@ Donor description:
 {description}
 """
 
-    response = client.responses.create(
-        model="gpt-5.6-luna",
-        input=prompt
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=prompt
     )
 
     try:
-        return json.loads(response.output_text)
-
+        return json.loads(response.text)
     except json.JSONDecodeError:
-        raise ValueError(
-            "AI returned invalid JSON"
-        )
+        raise ValueError("AI returned invalid JSON")
