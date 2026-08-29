@@ -15,6 +15,8 @@ def create_app():
     app.config.from_object(Config)
     app.config["UPLOAD_FOLDER"].mkdir(parents=True, exist_ok=True)
     db.init_app(app)
+    with app.app_context():
+        db.create_all()
 
     login_manager = LoginManager(app)
     login_manager.login_view = "auth.login"
